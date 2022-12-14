@@ -1,3 +1,3 @@
-const helpers = require('./helpers');
+const helpers = require("./helpers");
 
-module.exports = {helpers};
+module.exports = { helpers };
