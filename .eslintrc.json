@@ -8,12 +8,7 @@
     "node": true,
     "jest/globals": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
+  "extends": ["eslint:recommended"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -41,7 +36,6 @@
     "no-caller": "error",
     "no-empty-function": "error",
     "no-eval": "error",
-    "react/prop-types": 0,
     "arrow-parens": 2
   }
 }
