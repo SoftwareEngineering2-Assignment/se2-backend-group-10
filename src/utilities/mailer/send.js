@@ -14,6 +14,5 @@ module.exports = (to, subject, email) => {
     html: email,
   };
 
-  console.log(msg);
-  sg.send(msg).then(() => console.log("HERE"));
+  sg.send(msg);
 };

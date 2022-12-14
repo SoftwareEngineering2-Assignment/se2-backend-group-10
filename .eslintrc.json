@@ -36,6 +36,14 @@
     "no-caller": "error",
     "no-empty-function": "error",
     "no-eval": "error",
-    "arrow-parens": 2
+    "arrow-parens": 2,
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "all",
+        "argsIgnorePattern": "(^_$)|(^__)|(req)|(res)|(next)",
+        "varsIgnorePattern": "(^_$)|(^__)"
+      }
+    ]
   }
 }
