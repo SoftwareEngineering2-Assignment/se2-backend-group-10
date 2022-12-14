@@ -1,61 +1,48 @@
 {
+  "globals": {
+    "JSX": "readonly"
+  },
   "env": {
     "browser": true,
-    "commonjs": true,
-    "es6": true
+    "es2021": true,
+    "node": true,
+    "jest/globals": true
   },
-  "plugins": ["ava"],
-  "extends": "airbnb-base",
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
-  },
+  "extends": ["eslint:recommended"],
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
   },
+  "plugins": ["ava", "jest", "only-warn"],
   "rules": {
-    "no-throw-literal": "off",
-    "block-spacing": "warn",
-    "eol-last": "warn",
-    "quotes": "warn",
-    "space-infix-ops": "warn",
-    "arrow-spacing": "warn",
-    "padded-blocks": "warn",
-    "comma-spacing": "warn",
-    "comma-dangle": "off",
-    "no-empty": "off",
-    "no-trailing-spaces": "off",
-    "no-underscore-dangle": "off",
-    "no-multiple-empty-lines": "warn",
-    "no-param-reassign": 0,
-    "key-spacing": "warn",
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "quotes": ["error", "double"],
+    "semi": ["error", "always"],
+    "no-console": 1,
+    "no-await-in-loop": "error",
+    "no-promise-executor-return": "error",
+    "no-template-curly-in-string": "error",
+    "no-unsafe-optional-chaining": "error",
+    "no-useless-backreference": "error",
+    "require-atomic-updates": "error",
+    "array-callback-return": "error",
+    "block-scoped-var": "error",
+    "consistent-return": "error",
+    "default-case": "error",
+    "default-case-last": "error",
+    "no-caller": "error",
+    "no-empty-function": "error",
+    "no-eval": "error",
+    "arrow-parens": 2,
     "no-unused-vars": [
       "error",
       {
         "args": "all",
         "argsIgnorePattern": "(^_$)|(^__)|(req)|(res)|(next)",
         "varsIgnorePattern": "(^_$)|(^__)"
-      }
-    ],
-    "no-nested-ternary": "off",
-    "semi": "warn",
-    "global-require": "off",
-    "implicit-arrow-linebreak": ["off", "below"],
-    "object-curly-spacing": ["warn", "never"],
-    "object-curly-newline": [
-      "warn",
-      {
-        "ObjectExpression": {
-          "multiline": true,
-          "minProperties": 5
-        },
-        "ObjectPattern": {
-          "multiline": true
-        },
-        "ExportDeclaration": {
-          "multiline": true,
-          "minProperties": 3
-        }
       }
     ]
   }
