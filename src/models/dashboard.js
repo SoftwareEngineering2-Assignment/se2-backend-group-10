@@ -1,4 +1,8 @@
 /* eslint-disable func-names */
+/**
+ * requires the "mongoose" and "mongoose-beautiful-unique-validation" packages
+ * requires the passwordDigest and comparePassword functions from the helpers file in the authentication folder
+ */
 const mongoose = require("mongoose");
 const beautifyUnique = require("mongoose-beautiful-unique-validation");
 const {
@@ -6,8 +10,14 @@ const {
   comparePassword,
 } = require("../utilities/authentication/helpers");
 
+// Set the mongoose pluralize to null
 mongoose.pluralize(null);
 
+/**
+ * Mongoose schema for a "Dashboard" model, which defines fields such as "name", "layout", "items", "password", "owner" and "createdAt"
+ * Sets validation rules and default values for some fields
+ * Also sets the index for name field and sets a default date of creation.
+ */
 const DashboardSchema = new mongoose.Schema({
   name: {
     index: true,

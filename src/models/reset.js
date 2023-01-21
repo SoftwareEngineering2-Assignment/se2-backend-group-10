@@ -1,10 +1,16 @@
 /* eslint-disable func-names */
+
+/**
+ * imports the mongoose package, the mongoose-beautiful-unique-validation package and
+ * the expires property from the constants object in the validation object in the utilities folder
+ */
 const mongoose = require("mongoose");
 const beautifyUnique = require("mongoose-beautiful-unique-validation");
 const {
   constants: { expires },
 } = require("../utilities/validation");
 
+//Mongoose schema for a "reset-tokens" model, which defines fields such as "username", "token" and "expireAt"
 const ResetSchema = new mongoose.Schema({
   username: {
     index: true,

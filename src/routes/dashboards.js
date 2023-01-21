@@ -8,6 +8,7 @@ const router = express.Router();
 const Dashboard = require("../models/dashboard");
 const Source = require("../models/source");
 
+// creates a new route that handles GET requests to /dashboards
 router.get("/dashboards", authorization, async (req, res, next) => {
   try {
     const { id } = req.decoded;
@@ -32,6 +33,7 @@ router.get("/dashboards", authorization, async (req, res, next) => {
   }
 });
 
+//checks if a user already has a dashboard with the same name and creates a new dashboard if not
 router.post("/create-dashboard", authorization, async (req, res, next) => {
   try {
     const { name } = req.body;
@@ -60,6 +62,7 @@ router.post("/create-dashboard", authorization, async (req, res, next) => {
   }
 });
 
+// checks if the user has the authority to delete the dashboard and deletes it if so
 router.post("/delete-dashboard", authorization, async (req, res, next) => {
   try {
     const { id } = req.body;

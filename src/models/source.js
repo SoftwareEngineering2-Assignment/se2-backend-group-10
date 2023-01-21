@@ -4,6 +4,7 @@ const beautifyUnique = require("mongoose-beautiful-unique-validation");
 
 mongoose.pluralize(null);
 
+// Mongoose schema for a "Source" model, which defines fields such as "name", "type", "url", "login", "passcode", "vhost", "owner" and "createdAt"
 const SourceSchema = new mongoose.Schema({
   name: {
     index: true,
