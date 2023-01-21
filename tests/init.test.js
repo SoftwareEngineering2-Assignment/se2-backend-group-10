@@ -9,6 +9,12 @@ const listen = require("test-listen");
 const app = require("../src/index");
 const { jwtSign } = require("../src/utilities/authentication/helpers");
 
+/**
+ * starts a server and listens on a random port
+ * sets the 'prefixUrl' option of the 'got' object to the given URL
+ * makes a request to the server
+ * closes the server after all tests are done
+ */
 test.before(async (t) => {
   t.context.server = http.createServer(app);
   t.context.prefixUrl = await listen(t.context.server);
