@@ -83,6 +83,7 @@ router.post("/delete-dashboard", authorization, async (req, res, next) => {
   }
 });
 
+// extracts the dashboard from the database if exists and returns it to the client with the list of data sources. Otherwise, returns an 409 status code
 router.get("/dashboard", authorization, async (req, res, next) => {
   try {
     const { id } = req.query;
@@ -123,6 +124,7 @@ router.get("/dashboard", authorization, async (req, res, next) => {
   }
 });
 
+// searches for the dashboard and updates it if it exists. Otherwise, returns an 409 status code.
 router.post("/save-dashboard", authorization, async (req, res, next) => {
   try {
     const { id, layout, items, nextId } = req.body;
@@ -154,6 +156,7 @@ router.post("/save-dashboard", authorization, async (req, res, next) => {
   }
 });
 
+// checks if a dashboard with the same name already exists, finds the dashboard to be cloned and creates a new dashboard with the same layout, items and nextId
 router.post("/clone-dashboard", authorization, async (req, res, next) => {
   try {
     const { dashboardId, name } = req.body;
@@ -188,6 +191,7 @@ router.post("/clone-dashboard", authorization, async (req, res, next) => {
   }
 });
 
+// returns the dashboard with the specified id if it exists and the user has the authority to view it. Otherwise, returns an 409 status code.
 router.post("/check-password-needed", async (req, res, next) => {
   try {
     const { user, dashboardId } = req.body;
@@ -250,6 +254,7 @@ router.post("/check-password-needed", async (req, res, next) => {
   }
 });
 
+// checks if the password is correct and if it is, the number of views is incremented and the dashboard is returned. Otherwise, returns an 409 status code.
 router.post("/check-password", async (req, res, next) => {
   try {
     const { dashboardId, password } = req.body;
@@ -289,6 +294,10 @@ router.post("/check-password", async (req, res, next) => {
   }
 });
 
+/**
+ * receives the dashboard id and checks if the user is authorized to perform the action
+ * if so, it updates the shared property of the dashboard and returns the new value. Otherwise, returns an 409 status code
+ */
 router.post("/share-dashboard", authorization, async (req, res, next) => {
   try {
     const { dashboardId } = req.body;
@@ -317,6 +326,11 @@ router.post("/share-dashboard", authorization, async (req, res, next) => {
   }
 });
 
+/**
+ * checks if the dashboard exists and if the user is authorized to perform the action
+ * if so, it updates the password property of the dashboard and returns the a succes message
+ * otherwise, returns an 409 status code
+ */
 router.post("/change-password", authorization, async (req, res, next) => {
   try {
     const { dashboardId, password } = req.body;
