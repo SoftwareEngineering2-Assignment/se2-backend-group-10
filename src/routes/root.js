@@ -1,3 +1,4 @@
+// creates a new router, sets the path to the index.html file and exports the router
 const express = require("express");
 const path = require("path");
 

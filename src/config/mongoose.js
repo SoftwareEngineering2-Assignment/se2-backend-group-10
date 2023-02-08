@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// creates a connection to the MongoDB database using mongoose
 const mongooseOptions = {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -11,6 +12,11 @@ const mongooseOptions = {
 };
 const mongodbUri = process.env.MONGODB_URI;
 
+/**
+ * exports a function, which is used in the src/index.js file
+ * returns a promise from the mongoose.connect() method
+ * catches any errors with the promise and logs them to the console
+ */
 module.exports = () => {
   // eslint-disable-next-line no-console
   mongoose.connect(mongodbUri, mongooseOptions).catch(console.error);

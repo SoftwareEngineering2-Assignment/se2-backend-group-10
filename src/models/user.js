@@ -11,6 +11,7 @@ const {
 
 mongoose.pluralize(null);
 
+// Mongoose schema for a "users" model, which defines fields such as "email", "username", "password" and "registrationDate"
 const UserSchema = new mongoose.Schema({
   email: {
     index: true,

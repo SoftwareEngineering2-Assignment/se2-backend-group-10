@@ -1,3 +1,8 @@
+/**
+ * Uses the Yup library to create a schema for validating the data and the ramda to check if the username and password are null or undefined.
+ * Creates a Yup object schema that defines the `email`, `password`, and `username` fields as required strings.
+ * Also, it defines the `request`, `register`, `authenticate`, `update`, and `change` schemas.
+ */
 const { isNil } = require("ramda");
 
 const yup = require("yup");

@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+
+// imports the required functions from the ramda library
 const {
   pipe,
   has,
@@ -9,12 +11,14 @@ const {
   propEq,
 } = require("ramda");
 
+// creates a function that formats the message for production environment
 const withFormatMessageForProduction = ifElse(
   allPass([propEq("status", 500), () => process.env.NODE_ENV === "production"]),
   assoc("message", "Internal server error occurred."),
   identity
 );
 
+// creates the error middleware and exports it
 module.exports = (error, req, res, next) =>
   /**
    * @name error

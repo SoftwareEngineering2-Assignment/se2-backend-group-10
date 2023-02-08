@@ -13,6 +13,10 @@ const router = express.Router();
 const User = require("../models/user");
 const Reset = require("../models/reset");
 
+/**
+ * checks if the a user with the same username or email already exists and creates a new user if not
+ * if a user with the same email already exists, the user gets an error message
+ */
 router.post(
   "/create",
   (req, res, next) => validation(req, res, next, "register"),
@@ -39,6 +43,13 @@ router.post(
   }
 );
 
+/**
+ * validates the request body using the authenticate schema and finds the user by username
+ * if the user is not found, the user gets an error message
+ * if the user is found, the password gets compared to the password in the database
+ * if the password does not match, the user gets an error message
+ * if the password matches, the user gets a token and the user object
+ */
 router.post(
   "/authenticate",
   (req, res, next) => validation(req, res, next, "authenticate"),
@@ -72,6 +83,10 @@ router.post(
   }
 );
 
+/**
+ * checks if the user's username exists and sends an e-mail with a token to the user
+ * returns a success message
+ */
 router.post(
   "/resetpassword",
   (req, res, next) => validation(req, res, next, "request"),
@@ -104,6 +119,7 @@ router.post(
   }
 );
 
+// checks for a valid reset token and a valid user and changes the user's password
 router.post(
   "/changepassword",
   (req, res, next) => validation(req, res, next, "change"),
