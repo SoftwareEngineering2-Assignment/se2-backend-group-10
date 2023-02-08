@@ -7,6 +7,7 @@ const router = express.Router();
 
 const Source = require("../models/source");
 
+// gets the all the user's sources, loops through them and creates a new array of sources
 router.get("/sources", authorization, async (req, res, next) => {
   try {
     const { id } = req.decoded;
@@ -36,6 +37,7 @@ router.get("/sources", authorization, async (req, res, next) => {
   }
 });
 
+// checks if a user already has a source with the same name and creates a new source if not
 router.post("/create-source", authorization, async (req, res, next) => {
   try {
     const { name, type, url, login, passcode, vhost } = req.body;
@@ -66,6 +68,7 @@ router.post("/create-source", authorization, async (req, res, next) => {
   }
 });
 
+// finds the source by id and owner, checks if the is a source with the same name and updates the source if not
 router.post("/change-source", authorization, async (req, res, next) => {
   try {
     const { id, name, type, url, login, passcode, vhost } = req.body;
@@ -106,6 +109,7 @@ router.post("/change-source", authorization, async (req, res, next) => {
   }
 });
 
+// finds the source by id and owner and deletes it if found. If not, returns an error
 router.post("/delete-source", authorization, async (req, res, next) => {
   try {
     const { id } = req.body;
@@ -126,6 +130,7 @@ router.post("/delete-source", authorization, async (req, res, next) => {
   }
 });
 
+// finds the source by name and owner and returns it if found. If not, returns an 409 error
 router.post("/source", async (req, res, next) => {
   try {
     const { name, owner, user } = req.body;
@@ -157,6 +162,7 @@ router.post("/source", async (req, res, next) => {
   }
 });
 
+// loops through the sources array and checks if it the source exists in the database. If not, it is added to the newSources array and then saved to the database
 router.post("/check-sources", authorization, async (req, res, next) => {
   try {
     const { sources } = req.body;

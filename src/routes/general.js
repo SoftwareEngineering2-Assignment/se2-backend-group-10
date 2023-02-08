@@ -8,6 +8,7 @@ const User = require("../models/user");
 const Dashboard = require("../models/dashboard");
 const Source = require("../models/source");
 
+// gets the total number of users, dashboards, views, and sources and returns them
 router.get("/statistics", async (req, res, next) => {
   try {
     const users = await User.countDocuments();
@@ -39,6 +40,7 @@ router.get("/statistics", async (req, res, next) => {
   }
 });
 
+// gets the URL from the query parameters, makes a request to it to get the status code and returns the status code and active status
 router.get("/test-url", async (req, res) => {
   try {
     const { url } = req.query;
@@ -55,6 +57,11 @@ router.get("/test-url", async (req, res) => {
   }
 });
 
+/**
+ * gets the request method (GET, POST, PUT), URL and any headers or body
+ * makes a request to the URL with the headers and body
+ * returns the status code and response body
+ */
 router.get("/test-url-request", async (req, res) => {
   try {
     const { url, type, headers, body: requestBody, params } = req.query;
