@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  app:
+    user: "1000"
+    image: node:16
+    container_name: se2-backend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/opt/src
+    working_dir: /opt/src
+    command: ["./.init"]
