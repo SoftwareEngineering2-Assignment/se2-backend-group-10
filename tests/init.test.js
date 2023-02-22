@@ -15,7 +15,8 @@ const { jwtSign } = require("../src/utilities/authentication/helpers");
  * makes a request to the server
  * closes the server after all tests are done
  */
-test.before(async (t) => { t.context.server = http.createServer(app);
+test.before(async (t) => {
+  t.context.server = http.createServer(app);
   await listen(t.context.server).then((url) => (t.context.prefixUrl = url));
   t.context.got = got.extend({
     http2: true,
@@ -48,8 +49,23 @@ test("GET /sources returns correct response and status code", async (t) => {
   t.is(statusCode, 200);
 });
 
+test("GET /sources with invalid token returns 403 and error message", async (t) => {
+  const url = "http://localhost:3000/sources/sources";
+
+  try {
+    await got(url, { responseType: "json" });
+  } catch (error) {
+    const { statusCode, body } = error.response;
+    t.is(statusCode, 403);
+    t.is(body.message, "Authorization Error: token missing.");
+  }
+});
+
 test("GET /test-url with valid URL returns expected response", async (t) => {
-  const response = await t.context.got("general/test-url?url=https://www.google.com", { responseType: "json" });
+  const response = await t.context.got(
+    "general/test-url?url=https://www.google.com",
+    { responseType: "json" }
+  );
 
   t.is(response.statusCode, 200);
   t.truthy(response.body.status);
@@ -57,10 +73,11 @@ test("GET /test-url with valid URL returns expected response", async (t) => {
 });
 
 test("GET /test-url with invalid URL returns expected response", async (t) => {
-  const response = await t.context.got("general/test-url?url=invalidurl", { responseType: "json" });
+  const response = await t.context.got("general/test-url?url=invalidurl", {
+    responseType: "json",
+  });
 
   t.is(response.statusCode, 200);
   t.is(response.body.status, 500);
   t.false(response.body.active);
 });
-
