@@ -93,3 +93,28 @@ test("GET /test-url with invalid URL returns expected response", async (t) => {
   t.is(response.body.status, 500);
   t.false(response.body.active);
 });
+
+//------------------------------------------------------------
+
+let server;
+server = app.listen();
+
+test("POST /create-source with invalid token returns error", async (t) => {
+  const url = `http://localhost:${server.address().port}/create-source`;
+
+  try {
+    await got.post(url, {
+      json: {
+        type: "foo",
+        url: "bar",
+        login: "baz",
+        passcode: "qux",
+        vhost: "quux",
+      },
+      responseType: "json",
+    });
+  } catch (error) {
+    const { statusCode } = error.response;
+    t.is(statusCode, 404);
+  }
+});
