@@ -61,6 +61,18 @@ test("GET /sources with invalid token returns 403 and error message", async (t) 
   }
 });
 
+test("GET /dashboards with invalid token returns 403 and error message", async (t) => {
+  const url = "http://localhost:3000/dashboards/dashboards";
+
+  try {
+    await got(url, { responseType: "json" });
+  } catch (error) {
+    const { statusCode, body } = error.response;
+    t.is(statusCode, 403);
+    t.is(body.message, "Authorization Error: token missing.");
+  }
+});
+
 test("GET /test-url with valid URL returns expected response", async (t) => {
   const response = await t.context.got(
     "general/test-url?url=https://www.google.com",
