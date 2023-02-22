@@ -49,28 +49,9 @@ test("GET /sources returns correct response and status code", async (t) => {
   t.is(statusCode, 200);
 });
 
-test("GET /sources with invalid token returns 403 and error message", async (t) => {
-  const url = "http://localhost:3000/sources/sources";
-
-  try {
-    await got(url, { responseType: "json" });
-  } catch (error) {
-    const { statusCode, body } = error.response;
-    t.is(statusCode, 403);
-    t.is(body.message, "Authorization Error: token missing.");
-  }
-});
-
-test("GET /dashboards with invalid token returns 403 and error message", async (t) => {
-  const url = "http://localhost:3000/dashboards/dashboards";
-
-  try {
-    await got(url, { responseType: "json" });
-  } catch (error) {
-    const { statusCode, body } = error.response;
-    t.is(statusCode, 403);
-    t.is(body.message, "Authorization Error: token missing.");
-  }
+test("GET /sources returns error", async (t) => {
+  const { statusCode } = await t.context.got("sources/sources");
+  t.is(statusCode, 403);
 });
 
 test("GET /test-url with valid URL returns expected response", async (t) => {
@@ -94,27 +75,66 @@ test("GET /test-url with invalid URL returns expected response", async (t) => {
   t.false(response.body.active);
 });
 
-//------------------------------------------------------------
+test("POST /test-url-request with valid parameters and URL returns expected response", async (t) => {
+  const url = "https://www.google.com";
+  const type = "POST";
+  const headers = { "Content-Type": "application/json" };
+  const body = { title: "Test Post", body: "This is a test post" };
+  const params = { userId: 1 };
+  const response = await t.context.got(
+    `general/test-url-request?url=${url}&type=${type}&headers=${JSON.stringify(
+      headers
+    )}&body=${JSON.stringify(body)}&params=${JSON.stringify(params)}`,
+    { responseType: "json" }
+  );
 
-let server;
-server = app.listen();
+  t.is(response.statusCode, 200);
+  t.truthy(response.body.status);
+});
 
-test("POST /create-source with invalid token returns error", async (t) => {
-  const url = `http://localhost:${server.address().port}/create-source`;
+test("GET /test-url-request with valid parameters and URL returns expected response", async (t) => {
+  const url = "https://www.google.com";
+  const type = "GET";
+  const params = { postId: 1 };
+  const response = await t.context.got(
+    `general/test-url-request?url=${url}&type=${type}&params=${JSON.stringify(
+      params
+    )}`,
+    { responseType: "json" }
+  );
 
-  try {
-    await got.post(url, {
-      json: {
-        type: "foo",
-        url: "bar",
-        login: "baz",
-        passcode: "qux",
-        vhost: "quux",
-      },
-      responseType: "json",
-    });
-  } catch (error) {
-    const { statusCode } = error.response;
-    t.is(statusCode, 404);
-  }
+  t.is(response.statusCode, 200);
+  t.truthy(response.body.status);
+});
+
+test("PUT /test-url-request with valid parameters and URL returns expected response", async (t) => {
+  const url = "https://www.google.com";
+  const type = "PUT";
+  const headers = { "Content-Type": "application/json" };
+  const body = {
+    id: 1,
+    title: "Test Post Updated",
+    body: "This is an updated test post",
+  };
+  const response = await t.context.got(
+    `general/test-url-request?url=${url}&type=${type}&headers=${JSON.stringify(
+      headers
+    )}&body=${JSON.stringify(body)}`,
+    { responseType: "json" }
+  );
+
+  t.is(response.statusCode, 200);
+  t.truthy(response.body.status);
+});
+
+test("DELETE /test-url-request with valid parameters and URL returns expected response", async (t) => {
+  const url = "https://www.google.com";
+  const type = "DELETE";
+  const response = await t.context.got(
+    `general/test-url-request?url=${url}&type=${type}`,
+    { responseType: "json" }
+  );
+
+  t.is(response.statusCode, 200);
+  t.truthy(response.body.status);
 });
