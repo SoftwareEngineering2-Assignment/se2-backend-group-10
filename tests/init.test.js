@@ -70,7 +70,7 @@ test("GET /test-url with invalid URL returns expected response", async (t) => {
   t.false(response.body.active);
 });
 
-// id??
+
 test("GET /dashboard returns the correct dashboard and sources", async (t) => {
   const token = jwtSign({ id: 1 });
   const response = await t.context.got(`dashboards/dashboards?token=${token}`);
@@ -78,4 +78,11 @@ test("GET /dashboard returns the correct dashboard and sources", async (t) => {
   t.is(response.statusCode, 200);
   t.is(response.body.success, true);
   t.truthy(response.body.dashboards);
+});
+
+
+test("GET /dashboard returns the list of data sources", async (t) => {
+  const response = await t.context.got(`dashboards/dashboards`);
+
+  t.is(response.statusCode, 403);
 });
