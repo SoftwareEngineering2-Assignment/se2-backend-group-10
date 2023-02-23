@@ -9,7 +9,6 @@ const listen = require("test-listen");
 const app = require("../src/index");
 const { jwtSign } = require("../src/utilities/authentication/helpers");
 
-const Dashboard = require("../src/routes/dashboards");
 /**
  * starts a server and listens on a random port
  * sets the 'prefixUrl' option of the 'got' object to the given URL
