@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/github-workflow.json
+
+name : cicd
+
+on : [push]
+  
+jobs:
+
+  ci:
+    env:
+      SERVER_SECRET: ${{ secrets.SERVER_SECRET}}
+      MONGODB_URI: ${{ secrets.MONGODB_URI}}
+      SERVER_EMAIL: ${{ secrets.SERVER_EMAIL}}
+      SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Check lint
+        run: npm run lint
+      - name: Run test
+        run: npm test
+        
+  cd: 
+    runs-on: ubuntu-latest
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/se2/10/se2-backend
+            rm -rf * .* 2>/dev/null
+            git clone https://github.com/SoftwareEngineering2-Assignment/se2-backend-group-10 .
+            npm install
+            pm2 restart se2-backend-10
