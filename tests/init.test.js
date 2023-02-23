@@ -9,6 +9,7 @@ const listen = require("test-listen");
 const app = require("../src/index");
 const { jwtSign } = require("../src/utilities/authentication/helpers");
 
+const Dashboard = require("../src/routes/dashboards");
 /**
  * starts a server and listens on a random port
  * sets the 'prefixUrl' option of the 'got' object to the given URL
@@ -64,3 +65,16 @@ test("GET /test-url with invalid URL returns expected response", async (t) => {
   t.false(response.body.active);
 });
 
+
+// id??
+test("GET /dashboard returns the correct dashboard and sources", async (t) => {
+  const response = await t.context.got.get("routes/dashboards?id=" + "1", {
+    headers: {
+      authorization: `Bearer ${jwtSign({ id: "testuser" })}`,
+    },
+  });
+  t.is(response.statusCode, 200);
+  t.is(response.body.success, true);
+  t.truthy(response.body.dashboard);
+  t.truthy(response.body.sources);
+});
