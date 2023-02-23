@@ -81,8 +81,27 @@ test("GET /dashboard returns the correct dashboard and sources", async (t) => {
 });
 
 
-test("GET /dashboard returns the list of data sources", async (t) => {
-  const response = await t.context.got(`dashboards/dashboards`);
+test("GET /dashboards returns 403 as there unauthorized entry try", async (t) => {
+  const response = await t.context.got("dashboards/dashboards");
 
   t.is(response.statusCode, 403);
+});
+
+test("GET /dashboard returns 403 as there unauthorized entry try", async (t) => {
+  const response = await t.context.got("dashboards/dashboard");
+
+  t.is(response.statusCode, 403);
+});
+
+test("POST /dashboards/create-dashboard", async (t) => {
+  const token = jwtSign({ id: 1 });
+  var options = {
+    json: {
+      name: "new_dash",
+    },
+    responseType: "json",
+  };
+
+  const response = await t.context.got.post(`dashboards/create-dashboard?token=${token}`, options);
+  t.is(response.statusCode, 200);
 });
