@@ -93,8 +93,8 @@ test("GET /dashboard returns 403 as there unauthorized entry try", async (t) => 
   t.is(response.statusCode, 403);
 });
 
-test("POST /dashboards/create-dashboard", async (t) => {
-  const token = jwtSign({ id: 1 });
+test("POST create and delete /dashboards", async (t) => {
+  const token = jwtSign({ id: "638bb43acb0182b0c398149c" });
   var options = {
     json: {
       name: "new_dash",
@@ -104,4 +104,21 @@ test("POST /dashboards/create-dashboard", async (t) => {
 
   const response = await t.context.got.post(`dashboards/create-dashboard?token=${token}`, options);
   t.is(response.statusCode, 200);
+  t.is(response.body.success, true);
+
+  //console.log(response.body);
+  options ={
+    json: {
+      id: response.body.id,
+    },
+    responseType: "json",
+  };
+  
+
+  const response_delete = await t.context.got.post(`dashboards/delete-dashboard?token=${token}`, options);
+  t.is(response.statusCode, 200);
+
+// const response = await t.context.got.post(`dashboards/check-password-needed?token=${token}`, options);
+  // t.is(response.statusCode, 200);
+  // t.is(response.body.success, true
 });

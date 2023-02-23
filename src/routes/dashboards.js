@@ -48,7 +48,7 @@ router.post("/create-dashboard", authorization, async (req, res, next) => {
         message: "A dashboard with that name already exists.",
       });
     }
-    await new Dashboard({
+    const created = await new Dashboard({
       name,
       layout: [],
       items: {},
@@ -56,7 +56,7 @@ router.post("/create-dashboard", authorization, async (req, res, next) => {
       owner: mongoose.Types.ObjectId(id),
     }).save();
 
-    return res.json({ success: true });
+    return res.json({ success: true, id: created.id });
   } catch (err) {
     return next(err.body);
   }
