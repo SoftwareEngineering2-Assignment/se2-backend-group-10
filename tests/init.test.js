@@ -138,3 +138,36 @@ test("DELETE /test-url-request with valid parameters and URL returns expected re
   t.is(response.statusCode, 200);
   t.truthy(response.body.status);
 });
+
+test("POST /sources/create-source", async (t) => {
+  const token = jwtSign({ id: "638bb43acb0182b0c398149c" });
+  var options = {
+    json: {
+      login: "test",
+      name: "testname",
+      passcode: "testpasscode",
+      type: "testtype",
+      url: "ws://<DOMAIN>:<WEB_STOMP_PORT>/w",
+      vhost: "testvhost",
+    },
+    responseType: "json",
+  };
+
+  const response = await t.context.got.post(
+    `sources/create-source?token=${token}`,
+    options
+  );
+  t.is(response.statusCode, 200);
+
+  const source_id = response.body.id;
+  const delete_response = await t.context.got.post(
+    `sources/delete-source?token=${token}`,
+    {
+      json: {
+        id: source_id,
+      },
+      responseType: "json",
+    }
+  );
+  t.is(delete_response.statusCode, 200);
+});
