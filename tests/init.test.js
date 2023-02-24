@@ -171,3 +171,152 @@ test("POST /sources/create-source", async (t) => {
   );
   t.is(delete_response.statusCode, 200);
 });
+
+test("GET /dashboards returns the correct dashboard and sources", async (t) => {
+  const token = jwtSign({ id: 1 });
+  const response = await t.context.got(`dashboards/dashboards?token=${token}`);
+
+  t.is(response.statusCode, 200);
+  t.is(response.body.success, true);
+  t.truthy(response.body.dashboards);
+});
+
+
+test("GET /dashboards returns 403 as there unauthorized entry try", async (t) => {
+  const response = await t.context.got("dashboards/dashboards");
+
+  t.is(response.statusCode, 403);
+});
+
+test("GET /dashboard returns 403 as there unauthorized entry try", async (t) => {
+  const response = await t.context.got("dashboards/dashboard");
+
+  t.is(response.statusCode, 403);
+});
+
+test("POST create and delete /dashboards", async (t) => {
+  const token = jwtSign({ id: "638bb43acb0182b0c398149c" });
+
+  // Before creating try get dashboard -> should return 409 (no found)
+
+  const response_before = await t.context.got(`dashboards/dashboard?token=${token}`);
+  t.is(response_before.statusCode, 200);
+  t.is(response_before.body.status, 409);
+
+  // Create dashboard
+
+  //let random = (Math.random() + 2).toString(36).substring(7);
+
+  var options = {
+    json: {
+      name: "test",
+    },
+    responseType: "json",
+  };
+
+  const response = await t.context.got.post(`dashboards/create-dashboard?token=${token}`, options);
+  t.is(response.statusCode, 200);
+  t.is(response.body.success, true);
+
+  // Get dashboards
+
+  const response_view_dashboards = await t.context.got(`dashboards/dashboards?token=${token}`);
+  t.is(response_view_dashboards.statusCode, 200);
+  t.is(response_view_dashboards.body.success, true);
+  t.truthy(response_view_dashboards.body.dashboards);
+  
+  // Helper: Delete dashboard 
+  // let option ={
+  //   json: {
+  //     id: '',
+  //   },
+  //   responseType: "json",
+  // };
+  // const resp_delete = await t.context.got.post(`dashboards/delete-dashboard?token=${token}`, option);
+  // console.log(resp_delete.body);
+
+
+  // Save dashboard
+
+  options ={
+    json:{
+      id: response.body.id,
+      layout: [{i:"1", x:"1", y:"1", w:"1", h: "1", minW:"2", minH:"2" }],
+      items: {"1":{type:"text", name: "test", text: "test"}},
+      nextId: 2,
+    },
+    responseType: "json",
+  };
+
+  const response_save = await t.context.got.post(`dashboards/save-dashboard?token=${token}`, options);
+  t.is(response_save.statusCode,200);
+  t.is(response_save.body.success, true);
+
+
+  // Invalid save dashboard
+  
+  options ={
+    json:{
+      id: "invalid",
+      layout: [{i:"1", x:"1", y:"1", w:"1", h: "1", minW:"2", minH:"2" }],
+      items: {"1":{type:"text", name: "test", text: "test"}},
+      nextId: 100,
+    },
+    responseType: "json",
+  };
+  const response_save_invalid = await t.context.got.post(`dashboards/save-dashboard?token=${token}`, options);
+  t.is(response_save_invalid.statusCode,404);
+
+  // Export dashboard
+
+  const dashboard_id = response_view_dashboards.body.dashboards[0].id;
+  const response_export_dashboard = await t.context.got(`dashboards/dashboard?id=${dashboard_id}`,{
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  t.is(response_export_dashboard.statusCode, 200);
+  t.is(response_export_dashboard.body.success, true);
+  t.truthy(response_export_dashboard.body.dashboard);
+
+  // Clone dashboard
+
+  options = {
+    json: {
+      dashboardId: response.body.id,
+      name: "clone",
+    },
+    responseType: "json",
+  };
+
+  const response_clone = await t.context.got.post(`dashboards/clone-dashboard?token=${token}`, options);
+  t.is(response_clone.statusCode, 200);
+
+  // Delete the clone to continue
+
+  options ={
+    json: {
+      id: response_clone.body.id,
+    },
+    responseType: "json",
+  };
+
+  const response_delete_clone = await t.context.got.post(`dashboards/delete-dashboard?token=${token}`, options);
+  t.is(response_delete_clone.statusCode, 200);
+
+  // Delete dashboard
+
+  options ={
+    json: {
+      id: response.body.id,
+    },
+    responseType: "json",
+  };
+  
+  const response_delete = await t.context.got.post(`dashboards/delete-dashboard?token=${token}`, options);
+  t.is(response_delete.statusCode, 200);
+
+  // const response = await t.context.got.post(`dashboards/check-password-needed?token=${token}`, options);
+  // t.is(response.statusCode, 200);
+  // t.is(response.body.success, true
+});
