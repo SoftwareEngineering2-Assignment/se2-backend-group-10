@@ -52,7 +52,7 @@ router.post("/create-source", authorization, async (req, res, next) => {
         message: "A source with that name already exists.",
       });
     }
-    await new Source({
+    const created = await new Source({
       name,
       type,
       url,
@@ -62,7 +62,7 @@ router.post("/create-source", authorization, async (req, res, next) => {
       owner: mongoose.Types.ObjectId(id),
     }).save();
 
-    return res.json({ success: true });
+    return res.json({ success: true, id: created.id });
   } catch (err) {
     return next(err.body);
   }
