@@ -204,6 +204,42 @@ test("POST create and delete /dashboards", async (t) => {
   const response_delete_clone = await t.context.got.post(`dashboards/delete-dashboard?token=${token}`, options);
   t.is(response_delete_clone.statusCode, 200);
 
+  // Check password needed
+
+  options = {
+    json:{
+      dashboardId: response.body.id,
+      user: {
+        username: "cypress_user",
+        id: "638bb43acb0182b0c398149c",
+        email: "cypress@tester.com",
+      },
+    },
+    responsetype: "json",
+  };
+
+  const response_check_password = await t.context.got.post(`dashboards/check-password-needed?token=${token}`, options);
+  t.is(response_check_password.statusCode, 200);
+
+  // Share dashboard
+
+  options = {
+    json:{
+      dashboardId: response.body.id,
+      user: {
+        username: "cypress_user",
+        id: "638bb43acb0182b0c398149c",
+        email: "cypress@tester.com",
+      },
+    },
+    responsetype: "json",
+  };
+
+  const response_share = await t.context.got.post(`dashboards/share-dashboard?token=${token}`, options);
+  t.is(response_share.statusCode, 200);
+  t.is(response_share.body.success, true);
+  t.is(response_share.body.shared, true);
+  
   // Delete dashboard
 
   options ={
