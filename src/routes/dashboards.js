@@ -177,7 +177,7 @@ router.post("/clone-dashboard", authorization, async (req, res, next) => {
       owner: mongoose.Types.ObjectId(req.decoded.id),
     });
 
-    await new Dashboard({
+    const newDashboard = await new Dashboard({
       name,
       layout: oldDashboard.layout,
       items: oldDashboard.items,
@@ -185,7 +185,7 @@ router.post("/clone-dashboard", authorization, async (req, res, next) => {
       owner: mongoose.Types.ObjectId(req.decoded.id),
     }).save();
 
-    return res.json({ success: true });
+    return res.json({ success: true, newDashboardId: newDashboard._id });
   } catch (err) {
     return next(err.body);
   }
